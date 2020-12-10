@@ -17,6 +17,7 @@ RSpec.describe ExpenseReportManager do
       subject.add_expense 10
       subject.add_expense 20
       subject.add_expense 42
+      subject.add_expense 55
     end
 
     it 'returns the two expenses' do
@@ -33,6 +34,14 @@ RSpec.describe ExpenseReportManager do
 
       expect(subject.extract_summable(30)).to eql [10, 20]
     end
+
+    it 'returns the three expenses' do
+      expect(subject.extract_summable(85, number_of_expenses: 3)).to eql [10, 20, 55]
+    end
+
+    it "doesn't return less expenses" do
+      expect(subject.extract_summable(30, number_of_expenses: 3)).not_to eql [10, 20]
+    end
   end
 
   describe '.summable_product' do
@@ -40,6 +49,7 @@ RSpec.describe ExpenseReportManager do
       subject.add_expense 10
       subject.add_expense 20
       subject.add_expense 42
+      subject.add_expense 55
     end
 
     it 'returns the product of the two expenses' do
@@ -48,6 +58,10 @@ RSpec.describe ExpenseReportManager do
 
     it 'returns nil if there is no matching expenses' do
       expect(subject.summable_product(31)).to eql nil
+    end
+
+    it 'returns the product of the three expeneses' do
+      expect(subject.summable_product(30, number_of_expenses: 3)).to eql 11000
     end
   end
 end
