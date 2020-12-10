@@ -33,10 +33,22 @@ RSpec.describe PasswordManager do
       expect(subject.valid_passwords).to eql ['abcde', 'ccccccccc']
     end
   end
+
+  context 'with the OfficialTobogganCorporatePolicyRule rule' do
+    let(:subject) { described_class.new(PasswordManager::SledRentalRule) }
+
+    it 'has the same result as the challenge' do
+      subject.add_password('abcde', '1-3 a')
+      subject.add_password('cdefg', '1-3 b')
+      subject.add_password('ccccccccc', '2-9 c')
+
+      expect(subject.valid_passwords).to eql ['abcde']
+    end
+  end
 end
 
-RSpec.describe PasswordManager::Rule do
-  let(:subject) { PasswordManager::Rule.new('1-3 a') }
+RSpec.describe PasswordManager::SledRentalRule do
+  let(:subject) { described_class.new('1-3 a') }
   
   describe '.valid?' do
     it 'returns true for a valid password' do
@@ -49,6 +61,37 @@ RSpec.describe PasswordManager::Rule do
 
     it 'returns false for password with not enough times the character' do
       expect(subject.valid?("bcder")).to be false
+    end
+  end
+end
+
+RSpec.describe PasswordManager::OfficialTobogganCorporatePolicyRule do
+  let(:subject) { described_class.new('1-3 a') }
+
+  describe '.valid?' do
+    it 'returns true for a valid password for the first occurance' do
+      expect(subject.valid?("abcda")).to be true
+    end
+
+    it 'returns true for a valid password for the second occurance' do
+      expect(subject.valid?("bcada")).to be true
+    end
+
+    it 'returns false for password with no valid character positions' do
+      expect(subject.valid?("babaaaaaa")).to be false
+    end
+
+    it 'returns false when the two characters have the required value' do
+      expect(subject.valid?("aaaaaaaaa")).to be false
+    end
+
+    context 'if the rule mention a 0 character' do
+      let(:subject) { described_class.new('0-3 a') }
+
+      it "shouldn't crash and keep on searching" do
+        expect(subject.valid?('bbabb')).to be true
+        expect(subject.valid?('bbbbb')).to be false
+      end
     end
   end
 end
