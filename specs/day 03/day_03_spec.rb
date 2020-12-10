@@ -75,4 +75,30 @@ RSpec.describe Sled do
       expect(subject.count_trees(3, 1)).to eql 7
     end
   end
+
+  describe '.add_route' do
+    it 'adds the defined route' do
+      subject.add_route(3, 1)
+
+      expect(subject.routes).to include([3, 1])
+    end
+  end
+
+  describe '.compute_routes' do
+    before :each do
+      subject.add_route(1, 1)
+      subject.add_route(3, 1)
+      subject.add_route(5, 1)
+      subject.add_route(7, 1)
+      subject.add_route(1, 2)
+    end
+
+    it 'returns the best route' do
+      expect(subject.compute_routes[:best_route]).to eql({ x: 1, y: 1, trees: 2 })
+    end
+
+    it 'returns the product of all the routes' do
+      expect(subject.compute_routes[:product]).to eql 336
+    end
+  end
 end
