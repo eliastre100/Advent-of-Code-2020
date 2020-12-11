@@ -14,5 +14,5 @@ File.readlines(ARGV.first).each do |line|
   group_manager.add_answers line
 end
 
-puts "There are #{group_manager.groups.count} with #{group_manager.groups.map(&:number_answers).reduce(&:+)} answers in total"
-
+puts "There are #{group_manager.groups.count} with #{group_manager.groups.map(&:unique_answers).map(&:count).reduce(&:+)} answers in total"
+puts "#{group_manager.groups.map(&:unanimous_answers).map(&:count).reduce(&:+)} answers are unanimous"
