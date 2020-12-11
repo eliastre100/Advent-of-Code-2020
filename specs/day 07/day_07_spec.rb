@@ -16,13 +16,19 @@ RSpec.describe Bag do
     it 'sets the correct containable bag names' do
       subject = described_class.new('light red bags contain 1 bright white bag, 2 muted yellow bags.')
 
-      expect(subject.containable).to eql ['bright white', 'muted yellow']
+      expect(subject.containable).to eql({ 'bright white' => 1, 'muted yellow' => 2})
     end
 
     it 'adds itself to the list of bags type' do
       subject = described_class.new('light red bags contain 1 bright white bag, 2 muted yellow bags.')
 
       expect(Bag::List.registered_bags).to include subject
+    end
+
+    it 'does not keep the no other bags color' do
+      subject = described_class.new('dark violet bags contain no other bags.')
+
+      expect(subject.containable).to eql({})
     end
   end
 
@@ -46,6 +52,16 @@ RSpec.describe Bag do
       bag = described_class.new('faded blue bags contain no other bags.')
 
       expect(subject.can_contain?(bag)).to be true
+    end
+  end
+
+  describe '.nested_bags' do
+    it 'returns the nested bags' do
+      subject = described_class.new('light red bags contain 1 bright white bag, 2 muted yellow bags.')
+      described_class.new('muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.')
+      described_class.new('faded blue bags contain no other bags.')
+
+      expect(subject.nested_bags).to eql({ 'bright white' => 1, 'muted yellow' => 2, 'shiny gold' => 4, 'faded blue' => 18 })
     end
   end
 end
