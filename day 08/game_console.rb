@@ -39,12 +39,11 @@ class GameConsole
 
   private
 
-  HANDLERS =
 
-    def generate_byte_code(code)
-      splitted_code = code.split(' ')
-      { type: splitted_code.first.to_sym, value: splitted_code.last.to_i, visited: false }
-    end
+  def generate_byte_code(code)
+    splitted_code = code.split(' ')
+    { type: splitted_code.first.to_sym, value: splitted_code.last.to_i, visited: false }
+  end
 
   def run_line(pointer)
     return { status: :successful, value: accumulator} if pointer >= instructions.count
