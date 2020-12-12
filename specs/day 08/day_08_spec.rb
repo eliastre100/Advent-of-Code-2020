@@ -46,6 +46,56 @@ RSpec.describe GameConsole do
       subject.execute
       expect(subject.accumulator).to be 5
     end
+
+    it 'terminates successfully if trying to execute the line after the last instruction' do
+      subject.instructions.first[:type] = :jmp
+      subject.instructions.first[:value] = 8
+
+      expect(subject.execute).to eql({ status: :successful, value: 6 })
+    end
+  end
+
+  describe 'recover' do
+    it 'recovers through a nop' do
+      subject.instructions.first[:type] = :nop
+      subject.instructions.first[:value] = 8
+
+      expect(subject.execute).to eql({ error: :infinite_loop, line: 2 })
+
+      recover_report = subject.recover
+
+      expect(recover_report).to eql({ status: :successful, type: :nop, line: 1 })
+      expect(subject.execute).to eql({ error: :infinite_loop, line: 2 })
+    end
+
+    it 'recovers through a jmp' do
+      expect(subject.execute).to eql({ error: :infinite_loop, line: 2 })
+
+      recover_report = subject.recover
+
+      expect(recover_report).to eql({ status: :successful, type: :jmp, line: 8 })
+    end
+  end
+
+  describe '.apply_patch' do
+    it 'fixes a nop issue' do
+      subject.instructions.first[:type] = :nop
+      subject.instructions.first[:value] = 8
+
+      expect(subject.execute).to eql({ error: :infinite_loop, line: 2 })
+
+      subject.apply_patch({ status: :successful, type: :nop, line: 1 })
+
+      expect(subject.execute).to eql({ status: :successful, value: 6 })
+    end
+
+    it 'fixes a jmp issue' do
+      expect(subject.execute).to eql({ error: :infinite_loop, line: 2 })
+
+      subject.apply_patch({ status: :successful, type: :jmp, line: 8 })
+
+      expect(subject.execute).to eql({ status: :successful, value: 8 })
+    end
   end
 end
 
