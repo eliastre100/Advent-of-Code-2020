@@ -20,3 +20,4 @@ tensions_differences[:'3'] = (tensions_differences[:'3'] || 0) + 1
 puts "There is #{adapter_bag.adapters.count} adapters in the bag."
 puts "There are #{tensions_differences.map { |difference, count| "#{count} adapters with a #{difference} difference" }.join(', ')}"
 puts "The product of 1 and 3 differences is #{tensions_differences[:'1'] * tensions_differences[:'3']}"
+puts "There are #{adapter_bag.count_possible_arrangements} possible arrangements to connect the outlet to the device"

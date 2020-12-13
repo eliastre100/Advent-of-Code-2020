@@ -51,4 +51,12 @@ RSpec.describe AdapterBag do
       expect(subject.applied_tension_differences).to eql({ '1': 1, '2': 1, '3': 2 })
     end
   end
+
+  describe '.count_possible_arrangements' do
+    it 'finds the correct number of arrangements' do
+      [16, 10, 15, 5, 1, 11, 7, 19, 6, 12, 4].each { |joltage| subject.add_adapter Adapter.new(joltage) }
+
+      expect(subject.count_possible_arrangements).to be 8
+    end
+  end
 end
