@@ -19,4 +19,8 @@ if weakness[:frame].nil?
   puts "No weakness detected"
 else
   puts "Weakness found on frame #{weakness[:frame]}. Cannot have value #{weakness[:value]}"
+  breaking_frame = xmas_protocol.break_encryption
+  puts "Breaking starts at #{breaking_frame[:breaking_frame_start]} for #{breaking_frame[:breaking_factor]} with smallest #{breaking_frame[:breaking_numbers].min} and biggest #{breaking_frame[:breaking_numbers].max} (sum #{breaking_frame[:breaking_numbers].min + breaking_frame[:breaking_numbers].max})"
+  puts "Listing all number"
+  puts breaking_frame[:breaking_numbers].join(', ')
 end

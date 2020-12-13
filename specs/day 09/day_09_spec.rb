@@ -2,29 +2,6 @@ require 'rspec'
 require_relative '../../day 09/xmas_protocol'
 
 RSpec.describe XMASProtocol do
-  let(:stream) { <<~EOS
-    35
-    20
-    15
-    25
-    47
-    40
-    62
-    55
-    65
-    95
-    102
-    117
-    150
-    182
-    127
-    219
-    299
-    277
-    309
-    576
-EOS
-}
   let(:subject) { described_class.new(5) }
 
   describe '#initialize' do
@@ -80,6 +57,14 @@ EOS
       [35, 20, 15, 25, 47, 40, 62, 55, 65, 95, 102, 117, 150, 182, 127, 219, 299, 277, 309, 576].each { |frame| subject.add_frame frame }
 
       expect(subject.weakness).to eql({ frame: 15, value: 127 })
+    end
+  end
+
+  describe 'break_encryption' do
+    it 'finds the correct contiguous frames' do
+      [35, 20, 15, 25, 47, 40, 62, 55, 65, 95, 102, 117, 150, 182, 127, 219, 299, 277, 309, 576].each { |frame| subject.add_frame frame }
+
+      expect(subject.break_encryption).to eql({ breaking_factor: 4, breaking_numbers: [15, 25, 47, 40], breaking_frame_start: 3 })
     end
   end
 end
