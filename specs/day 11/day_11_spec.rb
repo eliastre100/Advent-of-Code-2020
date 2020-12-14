@@ -13,7 +13,7 @@ RSpec.describe Room do
     LLLLLLLLLL
     L.LLLLLL.L
     L.LLLLL.LL
-EOR
+  EOR
   }
   let(:subject) { described_class.new(room_schema)}
 
@@ -76,6 +76,26 @@ EOR
       subject.update
 
       expect(subject.update).to be false
+    end
+
+    context 'with the view detection method' do
+      it 'updates the map accordingly' do
+        subject.update(method: :view)
+        subject.update(method: :view)
+
+        expect(subject.visualization).to eql <<~EOM.chomp
+          #.LL.LL.L#
+          #LLLLLL.LL
+          L.L.L..L..
+          LLLL.LL.LL
+          L.LL.LL.LL
+          L.LLLLL.LL
+          ..L.L.....
+          LLLLLLLLL#
+          #.LLLLLL.L
+          #.LLLLL.L#
+        EOM
+      end
     end
   end
 

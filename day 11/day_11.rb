@@ -7,10 +7,19 @@ if ARGV.empty?
   exit 1
 end
 
-room = Room.new(File.read(ARGV.first))
+input_room = File.read(ARGV.first)
+room = Room.new(input_room)
 
 while room.update do; end
 
-puts "After #{room.generation} generations, the chaos stabilize with the map"
+puts "After #{room.generation} generations, the chaos stabilizes with the map"
 puts room.visualization
-puts "\nThere are #{room.occupied_seats} seats occupied"
+puts "There are #{room.occupied_seats} seats occupied\n\n"
+
+room = Room.new(input_room)
+
+while room.update method: :view do; end
+
+puts "After #{room.generation} generation with the view method, the chaos stabilizes with the map"
+puts room.visualization
+puts "There are #{room.occupied_seats} seats occupied"
