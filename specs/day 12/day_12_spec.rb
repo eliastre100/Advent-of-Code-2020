@@ -1,5 +1,6 @@
 require 'rspec'
 require_relative '../../day 12/ship'
+require_relative '../../day 12/fixed_ship'
 
 RSpec.describe Ship do
   let(:subject) { described_class.new(:east) }
@@ -170,6 +171,92 @@ RSpec.describe Ship do
       expect(subject).to receive(:forward).with(10)
 
       subject.handle('F10')
+    end
+  end
+end
+
+
+RSpec.describe FixedShip do
+  let(:subject) { described_class.new }
+
+  describe '#initialize' do
+    it 'sets the correct waypoint' do
+      expect(subject.waypoint).to eql({ x: 10, y: 1 })
+    end
+  end
+
+  describe '.north' do
+    it 'moves the waypoint north' do
+      expect(subject.waypoint).to eql({ x: 10, y: 1 })
+
+      subject.north(10)
+
+      expect(subject.waypoint).to eql({ x: 10, y: 11 })
+    end
+  end
+
+  describe '.east' do
+    it 'moves the waypoint east' do
+      expect(subject.waypoint).to eql({ x: 10, y: 1 })
+
+      subject.east(10)
+
+      expect(subject.waypoint).to eql({ x: 20, y: 1 })
+    end
+  end
+
+  describe '.south' do
+    it 'moves the waypoint south' do
+      expect(subject.waypoint).to eql({ x: 10, y: 1 })
+
+      subject.south(10)
+
+      expect(subject.waypoint).to eql({ x: 10, y: -9 })
+    end
+  end
+
+  describe '.west' do
+    it 'moves the waypoint west' do
+      expect(subject.waypoint).to eql({ x: 10, y: 1 })
+
+      subject.west(10)
+
+      expect(subject.waypoint).to eql({ x: 0, y: 1 })
+    end
+  end
+
+  describe '.left' do
+    it 'moves the waypoint to the left' do
+      subject.north(3)
+      expect(subject.waypoint).to eql({ x: 10, y: 4 })
+
+      subject.left(90)
+
+      expect(subject.waypoint).to eql({ x: -4, y: 10 })
+    end
+  end
+
+  describe '.right' do
+    it 'moves the waypoint to the right' do
+      subject.north(3)
+      expect(subject.waypoint).to eql({ x: 10, y: 4 })
+
+      subject.right(90)
+
+      expect(subject.waypoint).to eql({ x: 4, y: -10 })
+    end
+  end
+
+  describe '.forward' do
+    it 'moves forward to the waypoint' do
+      expect(subject.position).to eql({ x: 0, y: 0 })
+      expect(subject.waypoint).to eql({ x: 10, y: 1 })
+
+      subject.forward(1)
+      expect(subject.position).to eql({ x: 10, y: 1 })
+
+      subject.forward(9)
+      expect(subject.position).to eql({ x: 100, y: 10 })
     end
   end
 end
