@@ -11,8 +11,7 @@ class Mask
   end
 
   def apply(value)
-    binary = value.to_s(2).rjust(36, '0')
-    binary = binary.split('').map.with_index(&method(:apply_mask)).join
+    binary = binary_representation(value).split('').map.with_index(&method(:apply_mask)).join
     binary.to_i(2)
   end
 
@@ -21,5 +20,9 @@ class Mask
   def apply_mask(char, idx)
     return mask[idx] if ['0', '1'].include?(mask[idx])
     char
+  end
+
+  def binary_representation(value)
+    value.to_s(2).rjust(36, '0')
   end
 end

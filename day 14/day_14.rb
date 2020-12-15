@@ -3,11 +3,11 @@
 require_relative 'memory'
 
 if ARGV.empty?
-  warn 'Usage: ./day_14.rb [input file]'
+  warn 'Usage: ./day_14.rb [input file] [address | value]'
   exit 1
 end
 
-memory = Memory.new
+memory = Memory.new((ARGV[1] || :value).to_sym)
 
 File.readlines(ARGV.first).each do |line|
   if line.start_with?('mask = ')
