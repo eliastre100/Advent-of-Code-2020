@@ -1,25 +1,31 @@
 class CountTable
-  attr_reader :numbers
+  attr_reader :turns
+  attr_reader :last_spoken_number
 
   def initialize(numbers = '')
-    @numbers = numbers.split(',').map(&:to_i)
+    @numbers = {}
+    @turns = 0
+    numbers.split(',').map(&:to_i).each(&method(:add_number))
   end
 
   def play_turn
-    @numbers << (have_been_spoken?(numbers.last) ? time_since_spoken(numbers.last) : 0)
-  end
-
-  def turns
-    @numbers.size
+    number = (have_been_spoken?(last_spoken_number) ? time_since_spoken(last_spoken_number) : 0)
+    add_number number
   end
 
   private
 
+  def add_number(number)
+    @numbers[number] = [(@numbers[number] || []).last, turns].compact
+    @last_spoken_number = number
+    @turns += 1
+  end
+
   def have_been_spoken?(number)
-    numbers[0..-2].include?(number)
+    @numbers.has_key?(number) && @numbers[number].size == 2
   end
 
   def time_since_spoken(number)
-    numbers.size - numbers[0..-2].rindex(number) - 1 # the last number is not in the number of turn the numbers are apart
+    turns - @numbers[number].first - 1
   end
 end
