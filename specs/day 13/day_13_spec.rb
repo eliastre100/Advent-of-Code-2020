@@ -16,6 +16,16 @@ RSpec.describe Bus do
       expect(subject.next_departure(101)).to be 110
     end
   end
+
+  describe '.have_departure_at?' do
+    it 'returns false if there are no departure' do
+      expect(subject.have_departure_at?(21)).to be false
+    end
+
+    it 'returns true if there are a departure' do
+      expect(subject.have_departure_at?(20)).to be true
+    end
+  end
 end
 
 RSpec.describe BusStation do
@@ -34,7 +44,7 @@ RSpec.describe BusStation do
       expect(subject.buses).to eql []
       subject.add_bus bus
 
-      expect(subject.buses).to include bus
+      expect(subject.buses).to eql [{ bus: bus, index: 0 }]
     end
   end
 
@@ -47,6 +57,20 @@ RSpec.describe BusStation do
       subject.add_bus Bus.new(5)
 
       expect(subject.next_departing_bus).to be bus
+    end
+  end
+
+  describe '.next_chained_departure' do
+    it 'finds the next chain of departure' do
+      [7, 13, 'x', 'x', 59, 'x', 31, 19 ].each do |bus_line|
+        if bus_line == 'x'
+          subject.increase_index
+        else
+          subject.add_bus Bus.new(bus_line)
+        end
+      end
+
+      expect(subject.next_chained_departure(0)).to be 1068781
     end
   end
 end
