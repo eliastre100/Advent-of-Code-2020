@@ -17,7 +17,7 @@ RSpec.describe TicketScanner do
   describe '.add_rule' do
     it 'adds the rule' do
       subject.add_rule :class, '1-3 or 5-7'
-      expect(subject.rules).to eql({ class: [(1..3), (5..7)]})
+      expect(subject.rules).to eql({ class: [1, 2, 3, 5, 6, 7]})
     end
   end
 
@@ -44,6 +44,22 @@ RSpec.describe TicketScanner do
         { ticket: [55, 2, 20], invalid_values: [55] },
         { ticket: [38, 6, 12], invalid_values: [12] }
       ]
+    end
+  end
+
+  describe '.rules_ticket_index' do
+    it 'finds the correct index' do
+      subject.add_rule :class, '1-3 or 5-7'
+      subject.add_rule :row, '6-11 or 33-44'
+      subject.add_rule :seat, '13-40 or 45-50'
+
+      subject.add_ticket '7,3,47'
+      subject.add_ticket '40,4,50'
+      subject.add_ticket '55,2,20'
+      subject.add_ticket '38,6,12'
+      subject.add_ticket '11,12,13'
+
+      expect(subject.rules_ticket_index).to eql({ class: 1, row: 0, seat: 2 })
     end
   end
 end
