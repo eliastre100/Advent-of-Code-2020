@@ -12,15 +12,15 @@ RSpec.describe Pocket do
 
   describe '#initialize' do
     it 'initialize the 0 z plan' do
-      expect(subject.inactive?(0, 0, 0)).to be true
-      expect(subject.active?(1, 0, 0)).to be true
-      expect(subject.inactive?(2, 0, 0)).to be true
-      expect(subject.inactive?(0, 1, 0)).to be true
-      expect(subject.inactive?(1, 1, 0)).to be true
-      expect(subject.active?(2, 1, 0)).to be true
-      expect(subject.active?(0, 2, 0)).to be true
-      expect(subject.active?(1, 2, 0)).to be true
-      expect(subject.active?(2, 2, 0)).to be true
+      expect(subject.inactive?(0, 0, 0, 0)).to be true
+      expect(subject.active?(1, 0, 0, 0)).to be true
+      expect(subject.inactive?(2, 0, 0, 0)).to be true
+      expect(subject.inactive?(0, 1, 0, 0)).to be true
+      expect(subject.inactive?(1, 1, 0, 0)).to be true
+      expect(subject.active?(2, 1, 0, 0)).to be true
+      expect(subject.active?(0, 2, 0, 0)).to be true
+      expect(subject.active?(1, 2, 0, 0)).to be true
+      expect(subject.active?(2, 2, 0, 0)).to be true
     end
   end
 
@@ -114,11 +114,11 @@ RSpec.describe Pocket do
   describe '.active_cubes' do
     it 'returns the active cubes' do
       expect(subject.active_cubes).to eql [
-        { x: 1, y: 0, z: 0 },
-        { x: 2, y: 1, z: 0 },
-        { x: 0, y: 2, z: 0 },
-        { x: 1, y: 2, z: 0 },
-        { x: 2, y: 2, z: 0 }
+        { x: 1, y: 0, z: 0, w: 0 },
+        { x: 2, y: 1, z: 0, w: 0 },
+        { x: 0, y: 2, z: 0, w: 0 },
+        { x: 1, y: 2, z: 0, w: 0 },
+        { x: 2, y: 2, z: 0, w: 0 }
       ]
     end
   end
