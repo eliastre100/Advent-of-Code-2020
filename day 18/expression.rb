@@ -5,16 +5,17 @@ class Expression
 
   OPERATIONS = {
     '*': {
-      level: 0,
+      level: 100, # Lower is better
       operation: :multiplication
     },
     '+': {
-      level: 0,
+      level: 100,
       operation: :addition
     }
   }.freeze
 
-  def initialize(str)
+  def initialize(str, operations_definitions = OPERATIONS)
+    @operations_definitions = operations_definitions
     operator_idx = find_operator_idx(str)
     @operation = get_operation(operator_idx, str)
     set_operands(operator_idx, str)
@@ -30,11 +31,19 @@ class Expression
       operation.eql?(other.operation)
   end
 
+  def to_h
+    {
+      first_operand: first_operand.respond_to?(:to_h) ? first_operand.to_h : first_operand,
+      second_operand: second_operand.respond_to?(:to_h) ? second_operand.to_h : second_operand,
+      operation: operation
+    }
+  end
+
   private
 
   def get_operation(operator_idx, str)
     return :number if operator_idx.nil?
-    OPERATIONS.dig(str[operator_idx].to_sym, :operation)
+    @operations_definitions.dig(str[operator_idx].to_sym, :operation)
   end
 
   def find_operator_idx(str)
@@ -46,11 +55,11 @@ class Expression
       elsif character == ')'
         parenthesis += 1
       else
-        next OPERATIONS[character.to_sym][:level] if OPERATIONS.key?(character.to_sym) && parenthesis.zero?
+        next @operations_definitions[character.to_sym][:level] if @operations_definitions.key?(character.to_sym) && parenthesis.zero?
       end
       -1
     end
-    OPERATIONS.key?(str[index_operator].to_sym) ? index_operator : nil
+    @operations_definitions.key?(str[index_operator].to_sym) ? index_operator : nil
   end
 
   def set_operands(operator_idx, str)
